@@ -79,5 +79,5 @@ export async function updateStudent(prevState,formData){
     return { message: "user not found" };
   }
 
-  return redirect("/course");
+  return redirect("/student");
 }

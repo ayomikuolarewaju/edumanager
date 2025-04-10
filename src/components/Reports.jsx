@@ -33,7 +33,7 @@ const Reports = ({value1,value2,value3,value4}) => {
 
   return (
     
-        <div className='w-[800px] h-[300px] absolute top-[30px] left-[100px] pt-[20px] m-[10px] px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 grid grid-cols-1 md:grid-cols-4 gap-[340px]  justify-start items-center'>
+        <div className='w-[800px] h-[300px] absolute top-[180px] left-[100px] pt-[20px] m-[10px] px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 grid grid-cols-1 md:grid-cols-4 gap-[340px]  justify-start items-center'>
             {
                 menu.map((m,index)=>(
                     <div className='flex flex-col w-[300px] h-[150px] gap-[10px] justify-center items-start rounded-2xl p-3 bg-white shadow-md shadow-black' key={index}>

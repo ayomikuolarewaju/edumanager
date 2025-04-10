@@ -5,11 +5,10 @@ import React, {useActionState, useEffect, useState } from 'react'
 import Formsy from './Formsy'
 import {updateStudent} from '../actions/action.js'
 
-const StudentRender = () => {
+const HomeRender = () => {
      const [data, setData] = useState([])
      const [edtData,setEdtData] = useState({})
      const [isVisible,setIsVisible] = useState(true)
-     
      const [pending,formAction,message] = useActionState(updateStudent,null)
 
         useEffect(() =>{
@@ -28,8 +27,7 @@ const StudentRender = () => {
               if(id){
                 setIsVisible(!isVisible)
               }
-              const resp = await axios.get(`http://127.0.0.1:8080/api/v1/students/student/${id}`); 
-              console.log(await resp.data)
+              const resp = await axios.get(`http://127.0.0.1:8080/api/v1/students/student/${id}`);
                 setEdtData(await resp.data)
                 console.log(edtData)
         }
@@ -118,13 +116,12 @@ const StudentRender = () => {
                 <div className=' w-[1400px] h-[800px] justify-center items-center absolute top-[160px] left-[300px] content-center overflow-hidden bg-black/30 bg-blend-color z-40'>
                             <div className='h-[700px] w-[900px] bg-white shadow-md shadow-black flex flex-col justify-center items-center '>
                                   <div className='absolute top-[60px] right-[550px]'><button onClick={makeVisible} className='text-xl font-bold text-red-500 cursor-pointer'>X</button></div>
-                                  <div className='absolute top-[120px] font-bold text-2xl'><h4>Edit Student</h4></div>
+                                  <div className='absolute top-[120px] font-bold text-2xl'><h4>Edit Course</h4></div>
                                     <Formsy clicker={formAction}
-                                       div1={!true} name1='name' label1='name' type1='text' value1={edtData.name}
-                                       div2={!true} name2='email' type2='email' label2='email'  value2={edtData.email}
-                                       div3={!true} name3='phoneNumber' label3='phone number' type3='text'value3={edtData.phoneNumber}
                                        div4={!true} name4='id' label4='id' type4='text' value4={edtData.id} 
-                                      
+                                       div1={!true} name1='name' label1='name' type1='text' value1={edtData.name}
+                                       div2={!true} name2='email' type2='text' label2='email'  value2={edtData.email}
+                                       div3={!true} name3='phoneNumber' type3='text'   label3='Phone Number' value3={edtData.phoneNumber}
                                        okaybtn={!true} action='Edit Sudent'/>
                                  </div>
                                  </div>
@@ -134,4 +131,4 @@ const StudentRender = () => {
   )
 }
 
-export default StudentRender
+export default HomeRender
