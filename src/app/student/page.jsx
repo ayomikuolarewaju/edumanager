@@ -50,7 +50,7 @@ function page() {
         div1={!true} name1='name' label1='name' type1='text' 
         div2={!true} name2='email' type2='email' label2='email'  
         div4={!true} name4='phoneNumber' label4='phone number' type4='text'
-        div5={!true}  label5='course' value5={data.map((d)=>(d.name))}  name5={data.map((d,index)=>(d.name))} 
+        div5={!true}  label5='course' value5 name5
         okaybtn={!true} action='Add Student'/>
      </div>
   </div>

@@ -1,6 +1,6 @@
 
-import React from 'react'
-
+import axios from 'axios';
+import React, { useEffect, useState }  from 'react'
 
 const Formsy = ({
   name1,
@@ -31,6 +31,19 @@ const Formsy = ({
   value4,
   value5,
 }) => {
+
+  const [data, setData] = useState([])
+
+  useEffect(()=>{
+    
+    const resp =async()=>{await axios.get('http://127.0.0.1:8080/api/v1/students/courses');
+      setData( await resp.data)
+    } 
+    console.log(data)
+  resp()
+  },[])
+  
+ 
   return (
     <div className='h-screen  md:w-[600px] flex flex-col justify-start items-center'>
       <div className='flex h-[100px] md:w-full justify-center items-center mb-[10px]'>
@@ -100,9 +113,16 @@ const Formsy = ({
           <label className='text-black text-sm font-bold capitalize'>
             {label5}
           </label>
-         <select className='flex flex-col'>
-          <option  value={value5}>{name5}</option>
-         </select>
+         
+              <select  className='flex flex-col h-[30px] w-[100px] justify-center items-center'>
+              {
+                data?.map((d,index)=>{
+                  <option className='flex flex-col h-[100px] w-[100px]'  value={d.name} key={index}>{d.name}</option>
+                })
+              }
+             
+             </select>
+           
         </div>
         <div
           className='flex justify-start mt-4 cursor-pointer'

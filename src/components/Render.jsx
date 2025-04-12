@@ -82,7 +82,7 @@ const Render = () => {
                                 <div className="text-sm text-gray-900">{d.name}</div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{d.startDate}</div>
+                                <div className="text-sm text-gray-900">{d.description}</div>
                             </td>
                           
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-3">

@@ -96,7 +96,7 @@ const StudentRender = () => {
                                
                                 <button onClick={()=>{ 
                                     axios.delete(`http://127.0.0.1:8080/api/v1/students/delete/${d.id}`) 
-                                    redirect('/')}
+                                    redirect('/course')}
                                     } className="text-red-600 hover:text-red-800 cursor-pointer">
                                 Delete
                                 </button>

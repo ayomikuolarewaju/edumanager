@@ -35,8 +35,6 @@ const HomeRender = () => {
   return (
     <div>
           <div className="w-[1200px] mx-auto h-[500px] absolute top-[420px] left-[400px] z-30">
-        
-        
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
