@@ -1,36 +1,52 @@
 'use client'
-import axios from 'axios'
+
 import { redirect } from 'next/navigation'
 import React, {useActionState, useEffect, useState } from 'react'
-import Formsy from './Formsy'
-import {updateStudent} from '../actions/action.js'
+import {deleteStudentById, getAllStudents,getStudentById,getAllCourses, updateStudent} from '../actions/action.js'
+import Link from 'next/link.js'
+
+
 
 const StudentRender = () => {
-     const [data, setData] = useState([])
+     const [sdata, setSData] = useState([])
+     const [cdata, setCData] = useState([])
      const [edtData,setEdtData] = useState({})
      const [isVisible,setIsVisible] = useState(true)
      
-     const [pending,formAction,message] = useActionState(updateStudent,null)
+     const [message,formAction,isPending] = useActionState(updateStudent,null)
+
+     useEffect(() =>{
+           const fetchCourse = async () => {
+               try {
+                const res = await getAllCourses()
+                console.log(await res.data)
+                setCData(await res.data)
+               } catch (error) {
+                 console.log(error);
+               }
+             };
+           fetchCourse()
+       },[]) 
 
         useEffect(() =>{
-            const fetchData = async () => {
+            const fetchStudent = async () => {
                 try {
-                  const resp = await axios.get('http://127.0.0.1:8080/api/v1/students/all');
-                  setData(await resp.data);
+                  const resp = await getAllStudents();
+                  console.log(await resp.data)
+                  setSData(await resp.data);
                 } catch (error) {
-                  console.error(error.message);
+                  console.log(error);
                 }
               };
-            fetchData()
+            fetchStudent()
         },[])   
         
         const makeVisible =async (id) =>{
               if(id){
                 setIsVisible(!isVisible)
               }
-              const resp = await axios.get(`http://127.0.0.1:8080/api/v1/students/student/${id}`); 
-              console.log(await resp.data)
-                setEdtData(await resp.data)
+              const resp = await getStudentById(id); 
+                setEdtData(await resp)
                 console.log(edtData)
         }
    
@@ -60,13 +76,13 @@ const StudentRender = () => {
                         </tr>
                     </thead>
                     {
-                        data === ''
+                        sdata === ''
                         ?
                             <h4 className="text-center w-[300px] h-[300px] font-bold capitalize text-xl flex justisfy-center items-center">
                                 Pls No Data
                             </h4>
                         :
-                        data?.map((d,index) => (
+                        sdata?.map((sd,index) => (
                             <tbody className="bg-white divide-y divide-gray-200" key={index}>
                         <tr className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap">
@@ -75,28 +91,27 @@ const StudentRender = () => {
                                        
                                     </div>
                                     <div className="ml-4">
-                                        <div className="text-sm font-medium text-gray-900">{d.id}</div>
+                                        <Link href={`/student/${sd.id}`} className="text-sm font-medium text-gray-900">{sd.id}</Link>
                                         
                                     </div>
                                 </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{d.name}</div>
+                                <div className="text-sm text-gray-900">{sd.name}</div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{d.email}</div>
+                                <div className="text-sm text-gray-900">{sd.email}</div>
                             </td>
                           
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-3">
                             
                                 <button onClick={()=>{
-                                    makeVisible(d.id)
-                                
+                                    makeVisible(`${sd.id}`)
                                 }}  className="text-green-600 hover:text-green-900 cursor-pointer">Edit</button>
                                
                                 <button onClick={()=>{ 
-                                    axios.delete(`http://127.0.0.1:8080/api/v1/students/delete/${d.id}`) 
-                                    redirect('/course')}
+                                    deleteStudentById(`${sd.id}`) 
+                                    redirect('/')}
                                     } className="text-red-600 hover:text-red-800 cursor-pointer">
                                 Delete
                                 </button>
@@ -115,17 +130,92 @@ const StudentRender = () => {
             {
                 isVisible ? ""
                 :
-                <div className=' w-[1400px] h-[800px] justify-center items-center absolute top-[160px] left-[300px] content-center overflow-hidden bg-black/30 bg-blend-color z-40'>
+                <div className=' w-[1400px] h-[900px] justify-center items-center absolute top-[160px] left-[300px] content-center overflow-hidden bg-black/30 bg-blend-color z-40'>
                             <div className='h-[700px] w-[900px] bg-white shadow-md shadow-black flex flex-col justify-center items-center '>
                                   <div className='absolute top-[60px] right-[550px]'><button onClick={makeVisible} className='text-xl font-bold text-red-500 cursor-pointer'>X</button></div>
-                                  <div className='absolute top-[120px] font-bold text-2xl'><h4>Edit Student</h4></div>
-                                    <Formsy clicker={formAction}
-                                       div1={!true} name1='name' label1='name' type1='text' value1={edtData.name}
-                                       div2={!true} name2='email' type2='email' label2='email'  value2={edtData.email}
-                                       div3={!true} name3='phoneNumber' label3='phone number' type3='text'value3={edtData.phoneNumber}
-                                       div4={!true} name4='id' label4='id' type4='text' value4={edtData.id} 
-                                      
-                                       okaybtn={!true} action='Edit Sudent'/>
+                                  
+                                  <div className='absolute top-[120px] font-bold text-2xl pb-[20px]'><h4>Edit Student</h4></div>
+                                   <form className='flex flex-col  gap-4 p-4  rounded-lg shadow-2xl mt-[20px]' action={formAction}>
+          <div
+          className='flex flex-col gap-2 md:w-1/2 justify-center items-start h-[100px]'
+          >
+          <label className='text-black text-sm font-bold capitalize'>
+            ID
+          </label>
+          <input
+           placeholder={edtData?.id}
+            type='text'
+            name='id'
+            value={edtData?.id}
+            className='md:w-[400px] p-5 rounded-lg text-black text-md font-bold border-2 border-gray-300 focus:outline-none focus:border-gray-500'
+          />
+        </div>
+        <div
+          className='flex flex-col gap-2 md:w-1/2 justify-center items-start h-[100px]'
+          >
+          <label className='text-black text-sm font-bold capitalize'>
+            Name
+          </label>
+          <input
+           placeholder={edtData?.name}
+            type='text'
+            name='name'
+            className='md:w-[400px] p-5 rounded-lg text-black text-md font-bold border-2 border-gray-300 focus:outline-none focus:border-gray-500'
+          />
+        </div>
+        <div
+          className='flex flex-col gap-2 md:w-1/2 justify-center items-start h-[100px]'
+          
+        >
+          <label className='text-black text-sm font-bold capitalize'>
+            Email
+          </label>
+          <input
+           placeholder={edtData?.email}
+            type='text'
+            name='email'
+            className='md:w-[400px] p-5 rounded-lg text-black text-md font-bold border-2 border-gray-300 focus:outline-none focus:border-gray-500'
+          />
+        </div>
+        <div
+          className='flex flex-col gap-2 md:w-1/2 justify-center items-start h-[100px]'
+          
+        >
+          <label className='text-black text-sm font-bold capitalize'>
+           Phone Number
+          </label>
+          <input
+            type='text'
+            placeholder={edtData?.phoneNumber}
+            name='phoneNumber'
+            className='md:w-[400px] p-5 rounded-lg text-black text-md font-bold border-2 border-gray-300 focus:outline-none focus:border-gray-500'
+          />
+        </div>
+        <div className = "flex h-[20px] w-[400px] justisfy-center mt-3 text-black text-md gap-3 items-center">
+          <label className='text-black text-sm font-bold capitalize'>
+            Choose A Course
+          </label>
+              <select name='course' className='border-2 border-black rounded-md p-2 text-black text-md font-bold flex-1 w-[400px]'>
+                {cdata.map((cd,index)=>(
+                <option value={cd.name} key={index} className="text-black">
+              {`${cd.name}`}</option>))}
+              </select>
+        </div>
+        
+        <div
+          className='flex justify-start mt-4 cursor-pointer'
+         
+        >
+          <button
+            className='capitalize cursor-pointer md:w-[400px] bg-blue-700 text-white p-5 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out disable:bg-yellow-200'
+            type='submit'
+           
+          >
+            {!isPending ? 'Editing Student' : 'loading........'}
+          </button>
+        </div>
+      </form>
+                                    
                                  </div>
                                  </div>
             }
